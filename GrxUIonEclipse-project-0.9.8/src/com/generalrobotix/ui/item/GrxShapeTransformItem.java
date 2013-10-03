@@ -1,6 +1,7 @@
 package com.generalrobotix.ui.item;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.media.j3d.BadTransformException;
@@ -9,6 +10,7 @@ import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
+import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -25,6 +27,7 @@ import jp.go.aist.hrp.simulator.ModelLoaderPackage.ModelLoaderException;
 
 import com.generalrobotix.ui.GrxPluginManager;
 import com.generalrobotix.ui.grxui.GrxUIPerspectiveFactory;
+import com.generalrobotix.ui.plugin.ModelDataSelectionDialog;
 import com.generalrobotix.ui.util.AxisAngle4d;
 import com.generalrobotix.ui.util.GrxCorbaUtil;
 import com.generalrobotix.ui.util.MessageBundle;
@@ -311,15 +314,13 @@ public class GrxShapeTransformItem extends GrxTransformItem {
 				return MessageBundle.get("GrxLinkItem.menu.VRML97"); //$NON-NLS-1$
 			}
 			public void run(){
-				FileDialog fdlg = new FileDialog( GrxUIPerspectiveFactory.getCurrentShell(), SWT.OPEN);
-				fdlg.setFilterExtensions(new String[]{"*.wrl"});
-				fdlg.setFilterPath(getDefaultDir().getAbsolutePath());
-				String fPath = fdlg.open();
-				System.out.println("fPath = "+fPath); //$NON-NLS-1$
-				if( fPath != null ) {
-					addShape( fPath );
-					setDefaultDirectory(new File(fPath).getParent());
-				}
+			  ModelDataSelectionDialog mdlg = new ModelDataSelectionDialog();
+			  String fPath = mdlg.open();
+			  if (fPath != null) {
+			    org.eclipse.emf.common.util.URI u = org.eclipse.emf.common.util.URI.createURI(fPath);
+			    File f = new File(CommonPlugin.resolve(u).toFileString());
+			    addShape( f.getAbsolutePath() );
+			  }
 			}
 		};
         setMenuItem(item);

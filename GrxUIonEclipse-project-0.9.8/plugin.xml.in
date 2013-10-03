@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="com.generalrobotics.ui.grxui.modeldataprovider" name="ModelDataProvider" schema="schema/com.generalrobotics.ui.grxui.modeldataprovider.exsd"/>
+   <extension-point id="com.generalrobotics.ui.grxui.worlddataprovider" name="WorldDataProvider" schema="schema/com.generalrobotics.ui.grxui.worlddataprovider.exsd"/>
    <extension
          id="applications"
          point="org.eclipse.core.runtime.applications">

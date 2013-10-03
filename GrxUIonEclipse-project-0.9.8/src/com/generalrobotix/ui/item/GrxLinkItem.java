@@ -18,6 +18,7 @@
 package com.generalrobotix.ui.item;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,6 +44,7 @@ import jp.go.aist.hrp.simulator.SensorInfo;
 import jp.go.aist.hrp.simulator.ShapeInfo;
 import jp.go.aist.hrp.simulator.SegmentInfo;
 
+import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -53,6 +55,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import com.generalrobotix.ui.GrxPluginManager;
 import com.generalrobotix.ui.view.tdview.SceneGraphModifier;
 import com.generalrobotix.ui.grxui.GrxUIPerspectiveFactory;
+import com.generalrobotix.ui.plugin.ModelDataSelectionDialog;
 import com.generalrobotix.ui.util.AxisAngle4d;
 import com.generalrobotix.ui.util.CalcInertiaUtil;
 import com.generalrobotix.ui.util.GrxShapeUtil;
@@ -839,12 +842,11 @@ public class GrxLinkItem extends GrxTransformItem{
 				return MessageBundle.get("GrxLinkItem.menu.addRobot"); //$NON-NLS-1$
 			}
 			public void run(){
-				FileDialog fdlg = new FileDialog(GrxUIPerspectiveFactory.getCurrentShell(), SWT.OPEN);
-                String[] fe = { "*.wrl" };
-                fdlg.setFilterExtensions(fe);
-                String fPath = fdlg.open();
+			  ModelDataSelectionDialog mdlg = new ModelDataSelectionDialog();
+			  String fPath = mdlg.open();
                 if (fPath != null) {
-                    File f = new File(fPath);
+			    org.eclipse.emf.common.util.URI u = org.eclipse.emf.common.util.URI.createURI(fPath);
+			    File f = new File(CommonPlugin.resolve(u).toFileString());
 					addRobot( f );
                 }
 			}

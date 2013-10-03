@@ -65,4 +65,8 @@ public class MessageBundle {
     }
     
     public static final ResourceBundle getMessages() { return messages_; }
+
+    public static String getString(String string) {
+      return get(string);
+    }
 } 
