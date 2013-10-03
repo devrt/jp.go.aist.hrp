@@ -82,7 +82,6 @@ public class GrxBasePlugin extends GrxConfigBundle {
 	protected GrxBasePlugin(String name, GrxPluginManager manager) {
 		manager_ = manager;
 		setName(name);
-		ireg_ = new ImageRegistry();
 		// menu item : restore Properties
 		Action a = new Action(){
 			public String getText(){
@@ -275,6 +274,8 @@ public class GrxBasePlugin extends GrxConfigBundle {
 	 */
 	protected void setIcon(String iconName) {
 		iconName_ = iconName;
+		if (ireg_ == null)
+		  ireg_ = new ImageRegistry();
 		if( ireg_.get( iconName_ ) == null )
 			ireg_.put( iconName_, ImageDescriptor.createFromURL( getClass().getResource( "/resources/images/"+iconName_ ) ) ); //$NON-NLS-1$
 		//icon_ = icon;
@@ -285,6 +286,8 @@ public class GrxBasePlugin extends GrxConfigBundle {
 	 * @return icon
 	 */
 	public Image getIcon() {
+    if (ireg_ == null)
+      ireg_ = new ImageRegistry();
 		return ireg_.get( iconName_ );
 	}
 

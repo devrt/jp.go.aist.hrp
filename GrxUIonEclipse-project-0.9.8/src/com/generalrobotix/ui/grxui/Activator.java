@@ -184,9 +184,6 @@ public class Activator extends AbstractUIPlugin implements IWorkbenchListener, I
             IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
             if(window!=null)
             	window.addPerspectiveListener(this);
-            registryImage();
-            registryFont();
-            registryColor();
             
             if( lockFile_ == null ){
                 try{
@@ -340,19 +337,41 @@ public class Activator extends AbstractUIPlugin implements IWorkbenchListener, I
 
     // アイコンの取得
     public Image getImage(String iconName) {
+      if (ireg_ == null) {
+        try {
+          registryImage();
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
         return ireg_.get(iconName);
     }
 
     // アイコンデスクリプタの取得
     public ImageDescriptor getDescriptor(String iconName) {
+      if (ireg_ == null) {
+        try {
+          registryImage();
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
         return ireg_.getDescriptor(iconName);
     }
 
     public Font getFont(String fontName){
+      if (freg_ == null) {
+        registryFont();
+      }
     	return freg_.get(fontName);
     }
     
     public Color getColor(RGB rgb){
+      if (creg_ == null) {
+        registryColor();
+      }
     	String s=StringConverter.asString(rgb);
     	Color color = creg_.get(s);
     	if(color==null)
@@ -361,6 +380,9 @@ public class Activator extends AbstractUIPlugin implements IWorkbenchListener, I
     }
     
     public Color getColor(String colorName){
+      if (creg_ == null) {
+        registryColor();
+      }
     	Color color = creg_.get(colorName);
     	if(color==null)
     		color = creg_.get("white");
@@ -368,6 +390,9 @@ public class Activator extends AbstractUIPlugin implements IWorkbenchListener, I
     }
     
     public void setColor(String colorName, RGB rgb){
+      if (creg_ == null) {
+        registryColor();
+      }
     	creg_.put(colorName, rgb);
     }
     /*
