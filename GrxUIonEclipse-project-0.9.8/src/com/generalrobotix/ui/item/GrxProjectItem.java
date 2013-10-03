@@ -34,15 +34,24 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
@@ -50,6 +59,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,6 +72,9 @@ import com.generalrobotix.ui.grxui.GrxUIPerspectiveFactory;
 import com.generalrobotix.ui.grxui.PreferenceConstants;
 import com.generalrobotix.ui.*;
 import com.generalrobotix.ui.view.Grx3DView;
+import com.generalrobotix.ui.plugin.IModelDataProvider;
+import com.generalrobotix.ui.plugin.IWorldDataProvider;
+import com.generalrobotix.ui.plugin.WorldDataSelectionDialog;
 import com.generalrobotix.ui.util.GrxConfigBundle;
 import com.generalrobotix.ui.util.GrxCorbaUtil;
 import com.generalrobotix.ui.util.GrxDebugUtil;
@@ -479,15 +492,10 @@ public class GrxProjectItem extends GrxBaseItem {
 	 * @brief load a project
 	 */
 	public void load() {
-		FileDialog fdlg = new FileDialog( GrxUIPerspectiveFactory.getCurrentShell(), SWT.OPEN);
-		String[] fe = { "*.xml" }; //$NON-NLS-1$
-		fdlg.setFilterExtensions( fe );
-        fdlg.setFilterPath(getDefaultDir().getAbsolutePath());
-		
-		String fPath = fdlg.open();
-		if( fPath != null ) {
-			File f = new File(fPath);
-			load(f);
+	  WorldDataSelectionDialog dialog = new WorldDataSelectionDialog();
+	  String f = dialog.open();
+	  if (f != null) {
+	    load(new File(f));
 		}
 	}
 

@@ -28,6 +28,11 @@ import java.net.URL;
 import java.util.*;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.CommonPlugin;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -41,6 +46,7 @@ import com.generalrobotix.ui.grxui.Activator;
 import com.generalrobotix.ui.grxui.GrxUIPerspectiveFactory;
 import com.generalrobotix.ui.grxui.PreferenceConstants;
 
+import com.generalrobotix.ui.plugin.ModelDataSelectionDialog;
 import com.generalrobotix.ui.util.GrxCorbaUtil;
 import com.generalrobotix.ui.util.GrxDebugUtil;
 import com.generalrobotix.ui.util.GrxPluginLoader;
@@ -983,6 +989,17 @@ public class GrxPluginManager implements IPropertyChangeListener {
             }
 
             public void run() {
+            	if (pi.title.equals("Model")) {
+    				ModelDataSelectionDialog mdlg = new ModelDataSelectionDialog();
+                    String fPath = mdlg.open();
+                    if (fPath != null) {
+	                    GrxBaseItem newItem = loadItem(cls, null, fPath);
+	                    if(newItem!=null){
+		                    itemChange(newItem, GrxPluginManager.ADD_ITEM);
+		                    setSelectedItem(newItem, true);
+	                    }
+                    }
+            	} else {
                 FileDialog fdlg = new FileDialog(GrxUIPerspectiveFactory.getCurrentShell(), SWT.OPEN);
                 String[] fe = { pi.filter };
                 fdlg.setFilterExtensions(fe);
@@ -997,6 +1014,7 @@ public class GrxPluginManager implements IPropertyChangeListener {
 	                    pi.lastDir = f.getParentFile();
                     }
                 }
+            }
             }
         };
         menu.add(load);
