@@ -6,6 +6,7 @@
  * Contributors:
  * General Robotix Inc.
  * National Institute of Advanced Industrial Science and Technology (AIST) 
+ * MID Academic Promotions Inc.
  */
 package com.generalrobotix.ui.view.tdview;
 
@@ -20,7 +21,7 @@ import javax.media.format.*;
 
 import com.generalrobotix.ui.util.ErrorDialog;
 import com.generalrobotix.ui.util.MessageBundle;
-import com.sun.image.codec.jpeg.*; 
+import javax.imageio.ImageIO;
 
 /**
  * 動画再生アプリケーション
@@ -370,9 +371,8 @@ public class SimpleMoviePlayer extends JFrame implements ControllerListener {
                     new FileOutputStream(
                         chooser.getSelectedFile().getAbsolutePath()
                     );
-                JPEGImageEncoder enc=JPEGCodec.createJPEGEncoder(output);
-                enc.encode(_convertBufferedImage(frameGrabCtrl_.grabFrame() )); 
-                //enc.encode(codec_.getLastBufferedImage()); 
+                ImageIO.write(_convertBufferedImage(frameGrabCtrl_.grabFrame()), "jpeg", output);
+                //ImageIO.write(codec_.getLastBufferedImage(), "jpeg", output);
                 output.close();
             }
         }catch(Exception exception){

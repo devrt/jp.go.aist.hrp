@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.generalrobotix.ui.util.MessageBundle;
-import com.sun.image.codec.jpeg.*; 
+import javax.imageio.ImageIO;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -67,7 +67,7 @@ public class SWTMoviePlayer implements ControllerListener{
     //表示用
     private final String STR_TITLE_="SMPlayer"; //ウィンドウタイトル文字列 //$NON-NLS-1$
     private final String STR_RIGHT_="(C) 2000 Kernel Inc"; //版権文字列（おまけ） //$NON-NLS-1$
-
+    
     Shell window_ = null;
     Frame frame_;
     Composite comp_;
@@ -80,51 +80,51 @@ public class SWTMoviePlayer implements ControllerListener{
      * @param   fileName   動画ファイル名 or URL
      */
     public SWTMoviePlayer( Shell shell, String fileName ){
-    	
-    	window_ = new Shell( shell, SWT.SHELL_TRIM );
-		window_.setSize(200, 200);
-		window_.setText(MessageBundle.get("SWTMoviePlayer.window.title")); //$NON-NLS-1$
-
-		createMenu();
-		
-		FillLayout layout = new FillLayout();
-		window_.setLayout(layout);
-
-		//----
+        
+        window_ = new Shell( shell, SWT.SHELL_TRIM );
+        window_.setSize(200, 200);
+        window_.setText(MessageBundle.get("SWTMoviePlayer.window.title")); //$NON-NLS-1$
+        
+        createMenu();
+        
+        FillLayout layout = new FillLayout();
+        window_.setLayout(layout);
+        
+        //----
         // Linuxでリサイズイベントが発行されない問題対策
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=168330
-		comp_ = new Composite( window_, SWT.EMBEDDED );
-		frame_ = SWT_AWT.new_Frame( comp_ );
-
-		comp_.addControlListener( new ControlListener() {
-			public void controlMoved(ControlEvent e) {}
-			public void controlResized(ControlEvent e) {
-                frame_.setBounds(0, 0, comp_.getSize().x, comp_.getSize().y );
-			}
-        });
+        comp_ = new Composite( window_, SWT.EMBEDDED );
+        frame_ = SWT_AWT.new_Frame( comp_ );
+        
+        comp_.addControlListener( new ControlListener() {
+                public void controlMoved(ControlEvent e) {}
+                public void controlResized(ControlEvent e) {
+                    frame_.setBounds(0, 0, comp_.getSize().x, comp_.getSize().y );
+                }
+            });
         //----
         
-        window_.addShellListener(new ShellListener(){
-            public void shellActivated(ShellEvent e) {
-                // TODO 自動生成されたメソッド・スタブ
-            }
-            public void shellClosed(ShellEvent e) {
-                // TODO 自動生成されたメソッド・スタブ
-                _remove();
-            }
-            public void shellDeactivated(ShellEvent e) {
-                // TODO 自動生成されたメソッド・スタブ
-                
-            }
-            public void shellDeiconified(ShellEvent e) {
-                // TODO 自動生成されたメソッド・スタブ
-                
-            }
-            public void shellIconified(ShellEvent e) {
-                // TODO 自動生成されたメソッド・スタブ
-                
-            }
-        });
+        window_.addShellListener(new ShellListener() {
+                public void shellActivated(ShellEvent e) {
+                    // TODO 自動生成されたメソッド・スタブ
+                }
+                public void shellClosed(ShellEvent e) {
+                    // TODO 自動生成されたメソッド・スタブ
+                    _remove();
+                }
+                public void shellDeactivated(ShellEvent e) {
+                    // TODO 自動生成されたメソッド・スタブ
+                    
+                }
+                public void shellDeiconified(ShellEvent e) {
+                    // TODO 自動生成されたメソッド・スタブ
+                    
+                }
+                public void shellIconified(ShellEvent e) {
+                    // TODO 自動生成されたメソッド・スタブ
+                    
+                }
+            });
         
         contentPane_ = new JPanel();
         frame_.add(contentPane_);
@@ -134,65 +134,65 @@ public class SWTMoviePlayer implements ControllerListener{
 
         //枠線サイズを取得する
         frameX = window_.getSize().x - comp_.getSize().x;
-		frameY = window_.getSize().y - comp_.getSize().y;
-		System.out.println("frame size="+frameX+"-"+frameY); //$NON-NLS-1$ //$NON-NLS-2$
-
+        frameY = window_.getSize().y - comp_.getSize().y;
+        System.out.println("frame size="+frameX+"-"+frameY); //$NON-NLS-1$ //$NON-NLS-2$
+        
         //指定ファイルオープン
         if(_load(fileName)==false)_load(null);
     }
-
+    
     private void resizeWindow(){
-		Display display = Display.getDefault();
-		
-		if ( display!=null && !display.isDisposed())
-			// TODO: syncExecではこけるのだがなぜ？
-			display.asyncExec(
-				new Runnable(){
-					public void run() {
-						window_.setSize(contentPane_.getPreferredSize().width+frameX, contentPane_.getPreferredSize().height+frameY);
-					}
-				}
-			);
-
+        Display display = Display.getDefault();
+        
+        if ( display!=null && !display.isDisposed())
+            // TODO: syncExecではこけるのだがなぜ？
+            display.asyncExec(
+                new Runnable(){
+                    public void run() {
+                        window_.setSize(contentPane_.getPreferredSize().width+frameX, contentPane_.getPreferredSize().height+frameY);
+                    }
+                }
+            );
+        
     }
     
     private void createMenu() {
-		Menu menubar = new Menu(window_,SWT.BAR);
-		window_.setMenuBar(menubar);
-	    
-	    MenuItem item1 = new MenuItem(menubar,SWT.CASCADE);
-	    item1.setText(MessageBundle.get("SWTMoviePlayer.menu.file")); //$NON-NLS-1$
-	    
-	    Menu menu1 = new Menu(item1);
-	    item1.setMenu(menu1);
-	    
-	    MenuItem item1_1 = new MenuItem(menu1,SWT.PUSH);
-	    item1_1.setText(MessageBundle.get("SWTMoviePlayer.menu.open")); //$NON-NLS-1$
-	    item1_1.addSelectionListener(new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e) {
-				_open();
-			}
-	    });
-
-	    MenuItem item1_3 = new MenuItem(menu1,SWT.PUSH);
-	    item1_3.setText(MessageBundle.get("SWTMoviePlayer.menu.saveAs")); //$NON-NLS-1$
-	    item1_3.addSelectionListener(new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e) {
-				_saveImageAs();
-			}
-	    });
-	    
-	    MenuItem item1_4 = new MenuItem(menu1,SWT.PUSH);
-	    item1_4.setText(MessageBundle.get("SWTMoviePlayer.menu.quit")); //$NON-NLS-1$
-	    item1_4.addSelectionListener(new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e) {
-				window_.close();
-			}
-	    });
-	    
+        Menu menubar = new Menu(window_,SWT.BAR);
+        window_.setMenuBar(menubar);
+        
+        MenuItem item1 = new MenuItem(menubar,SWT.CASCADE);
+        item1.setText(MessageBundle.get("SWTMoviePlayer.menu.file")); //$NON-NLS-1$
+        
+        Menu menu1 = new Menu(item1);
+        item1.setMenu(menu1);
+        
+        MenuItem item1_1 = new MenuItem(menu1,SWT.PUSH);
+        item1_1.setText(MessageBundle.get("SWTMoviePlayer.menu.open")); //$NON-NLS-1$
+        item1_1.addSelectionListener(new SelectionAdapter(){
+                public void widgetSelected(SelectionEvent e) {
+                    _open();
+                }
+            });
+        
+        MenuItem item1_3 = new MenuItem(menu1,SWT.PUSH);
+        item1_3.setText(MessageBundle.get("SWTMoviePlayer.menu.saveAs")); //$NON-NLS-1$
+        item1_3.addSelectionListener(new SelectionAdapter(){
+                public void widgetSelected(SelectionEvent e) {
+                    _saveImageAs();
+                }
+            });
+        
+        MenuItem item1_4 = new MenuItem(menu1,SWT.PUSH);
+        item1_4.setText(MessageBundle.get("SWTMoviePlayer.menu.quit")); //$NON-NLS-1$
+        item1_4.addSelectionListener(new SelectionAdapter(){
+                public void widgetSelected(SelectionEvent e) {
+                    window_.close();
+                }
+            });
+        
     }
-
-
+    
+    
     /**
      * File-Open...の処理
      *
@@ -200,40 +200,40 @@ public class SWTMoviePlayer implements ControllerListener{
     File currentFile;
     private void _open() {
         FileDialog fDialog = new FileDialog(window_,SWT.OPEN);
-
+        
         String [] exts = {"*.mpg;*.avi;*.mov"}; //$NON-NLS-1$
-		String [] filterNames = {MessageBundle.get("SWTMoviePlayer.dialog.filter")}; //$NON-NLS-1$
-		fDialog.setFilterExtensions(exts);
-		fDialog.setFilterNames(filterNames);
-		
-		String openPath = fDialog.open();
-		if( openPath != null ) {
-			currentFile = new File( openPath );
-			/*
-            if(!_load("file:" + f.getAbsolutePath())){
+        String [] filterNames = {MessageBundle.get("SWTMoviePlayer.dialog.filter")}; //$NON-NLS-1$
+        fDialog.setFilterExtensions(exts);
+        fDialog.setFilterNames(filterNames);
+        
+        String openPath = fDialog.open();
+        if( openPath != null ) {
+            currentFile = new File( openPath );
+            /*
+              if(!_load("file:" + f.getAbsolutePath())){
             	MessageDialog.openError(window_, "Error", "Can't Open Movie." );
-                _load(null);
+              _load(null);
             }
             */
-			try {
-				SwingUtilities.invokeAndWait(new Runnable(){
-					public void run(){
-			            if(!_load("file:" + currentFile.getAbsolutePath())){ //$NON-NLS-1$
-			                _load(null);
-			            }
-					}
-				});
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (InvocationTargetException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-		}
+            try {
+                SwingUtilities.invokeAndWait(new Runnable(){
+                        public void run(){
+                            if(!_load("file:" + currentFile.getAbsolutePath())){ //$NON-NLS-1$
+                                _load(null);
+                            }
+                        }
+                    });
+            } catch (InterruptedException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            
+        }
     	
-    	/*
+        /*
     	JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
         // Note: source for ExampleFileFilter can be found in FileChooserDemo,
         // under the demo/jfc directory in the Java 2 SDK, Standard Edition.
@@ -265,11 +265,11 @@ public class SWTMoviePlayer implements ControllerListener{
     private void _remove(){
         //remove
         if (cmpVisual_!=null){
-        	contentPane_.remove(cmpVisual_);
+            contentPane_.remove(cmpVisual_);
             cmpVisual_=null;
         }
         if (cmpOpe_!=null){
-        	contentPane_.remove(cmpOpe_);
+            contentPane_.remove(cmpOpe_);
             cmpOpe_=null;
         }
         
@@ -496,59 +496,47 @@ public class SWTMoviePlayer implements ControllerListener{
      * File-Save Image As
      *
      */
-    JPEGImageEncoder enc;
     private void _saveImageAs(){
         if (p_ == null) {
-        	System.out.println("not init."); //$NON-NLS-1$
-        	return;
+            System.out.println("not init."); //$NON-NLS-1$
+            return;
         }
-		try {
-			SwingUtilities.invokeAndWait(new Runnable(){
-				public void run(){
-			        if (p_.getState()==Controller.Started)
-			            p_.stop();
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        try {
+            SwingUtilities.invokeAndWait(new Runnable(){
+                    public void run(){
+                        if (p_.getState()==Controller.Started)
+                            p_.stop();
+                    }
+                });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try{
             FileDialog fDialog = new FileDialog(window_,SWT.SAVE);
-
+            
             String [] exts = {"*.jpg"}; //$NON-NLS-1$
-    		String [] filterNames = {MessageBundle.get("SWTMoviePlayer.dialog.filter.jpeg")}; //$NON-NLS-1$
-    		fDialog.setFilterExtensions(exts);
-    		fDialog.setFilterNames(filterNames);
-    		
-    		String openPath = fDialog.open();
-    		if( openPath != null ) {
-				File f = new File( openPath );
+            String [] filterNames = {MessageBundle.get("SWTMoviePlayer.dialog.filter.jpeg")}; //$NON-NLS-1$
+            fDialog.setFilterExtensions(exts);
+            fDialog.setFilterNames(filterNames);
+            
+            String openPath = fDialog.open();
+            if( openPath != null ) {
+                File f = new File(openPath);
 
                 FileOutputStream output =
                     new FileOutputStream(
                         f.getAbsolutePath()
                     );
-                enc=JPEGCodec.createJPEGEncoder(output);
-
-        		try {
-        			SwingUtilities.invokeAndWait(new Runnable(){
-        				public void run(){
-        	                try {
-								enc.encode(_convertBufferedImage(frameGrabCtrl_.grabFrame() ));
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} 
-        				}
-        			});
-        		} catch (Exception e) {
-        			e.printStackTrace();
-        		}
-
+                try {
+                    ImageIO.write(_convertBufferedImage(frameGrabCtrl_.grabFrame()), "jpeg", output);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
                 //enc.encode(codec_.getLastBufferedImage()); 
                 output.close();
-    		}
-
+            }
+            
             /*        	
         	JFileChooser chooser =
                 new JFileChooser(System.getProperty("user.dir"));
