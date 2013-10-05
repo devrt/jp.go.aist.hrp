@@ -6,6 +6,7 @@
  * Contributors:
  * General Robotix Inc.
  * National Institute of Advanced Industrial Science and Technology (AIST)
+ * MID Academic Promotions Inc.
  */
 /*
  *  GrxPluginManager.java
@@ -469,8 +470,13 @@ public class GrxPluginManager implements IPropertyChangeListener {
 
         File f = null;
         try {
-            URL u = new URL(_url);
-            f = new File(u.getFile());
+            // Expand Eclipse platform scheme url (patched by MID)
+            ILog logger = Activator.getDefault().getLog();
+            logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Load url: " + _url));
+            org.eclipse.emf.common.util.URI u = org.eclipse.emf.common.util.URI.createURI(_url);
+            String fPath = CommonPlugin.resolve(u).toFileString();
+            logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Local file path: " + fPath));
+            f = new File(fPath);
         } catch (Exception e) {
             //GrxDebugUtil.printErr("loadItem(" + url + ") is not URL format\n", e);
             f = new File(_url);

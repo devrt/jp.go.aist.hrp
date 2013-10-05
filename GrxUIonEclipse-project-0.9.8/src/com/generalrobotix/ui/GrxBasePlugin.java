@@ -6,6 +6,7 @@
  * Contributors:
  * General Robotix Inc.
  * National Institute of Advanced Industrial Science and Technology (AIST)
+ * MID Academic Promotions Inc.
  */
 /*
  *  GrxBasePlugin.java
@@ -151,8 +152,13 @@ public class GrxBasePlugin extends GrxConfigBundle {
 		element_.setAttribute("class",getClass().getName()); //$NON-NLS-1$
 		element_.setAttribute("name", getName()); //$NON-NLS-1$
 		element_.setAttribute("select", String.valueOf(isSelected())); //$NON-NLS-1$
-		if (url_ != null)
+		if (url_ != null) {
+        if (url_.startsWith("platform:/")) {
+            element_.setAttribute("url", url_); //$NON-NLS-1$
+        } else {
 			element_.setAttribute("url", GrxXmlUtil.replaceEnvVal(new File(url_))); //$NON-NLS-1$
+        }
+		}
 		element_.appendChild(doc_.createTextNode("\n")); //$NON-NLS-1$
 
 		Enumeration<?> keys = propertyNames();
