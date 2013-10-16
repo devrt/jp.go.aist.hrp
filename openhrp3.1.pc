@@ -1,0 +1,21 @@
+prefix=/usr/local
+exec_prefix=${prefix}/bin
+libdir=${prefix}/lib
+includedir=-I${prefix}/include/OpenHRP-3.1 -I/usr/include/eigen3
+idl_dir=${prefix}/share/OpenHRP-3.1/idl
+link_shared_files=-lhrpCollision-3.1 -lhrpModel-3.1 -lhrpPlanner-3.1 -lhrpUtil-3.1 
+link_static_files=-lhrpCorbaStubSkel-3.1
+link_depend_dirs=-L/usr/lib/atlas-base/atlas 
+link_depend_files=-lblas -llapack -lboost_filesystem-mt -lboost_signals-mt -lboost_program_options-mt -lboost_regex-mt -ljpeg -lpng -lz 
+link_depend_options=''
+cflag_defs=
+cflag_options=
+
+Name: OpenHRP3.1
+Description: Platform software development of robots and simulations.
+URL: http://www.openrtp.jp/openhrp3/
+Version: 3.1.4
+Requires: openrtm-aist
+Libs: ${link_depend_dirs} -L${libdir} ${link_shared_files} ${link_depend_options} ${link_depend_files} 
+Libs.private: ${link_static_files}
+Cflags: ${cflag_defs} ${cflag_options} ${includedir}
