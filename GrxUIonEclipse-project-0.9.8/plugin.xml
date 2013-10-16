@@ -212,5 +212,19 @@
          point="org.eclipse.core.runtime.preferences">
       <initializer class="com.generalrobotix.ui.grxui.PreferenceInitializer"/>
    </extension>
+   <extension
+         point="com.generalrobotics.ui.grxui.modeldataprovider">
+      <modeldataprovider
+      		description="%plugin.DefaultModelProvider.name"
+            provider="com.generalrobotix.ui.plugin.DefaultModelDataProvider">
+      </modeldataprovider>
+   </extension>
+   <extension
+         point="com.generalrobotics.ui.grxui.worlddataprovider">
+      <worlddataprovider
+      		description="%plugin.DefaultWorldProvider.name"
+            provider="com.generalrobotix.ui.plugin.DefaultWorldDataProvider">
+      </worlddataprovider>
+   </extension>
 
 </plugin>

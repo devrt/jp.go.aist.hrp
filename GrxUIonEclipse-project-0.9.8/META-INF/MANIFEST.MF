@@ -2,13 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GrxUI プラグイン
 Bundle-SymbolicName: com.generalrobotix.ui.grxui;singleton:=true
-Bundle-Version: 0.9.8
+Bundle-Version: 0.9.8.qualifier
 Bundle-Activator: com.generalrobotix.ui.grxui.Activator
 Bundle-Vendor: GENERALROBOTIX
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui;bundle-version="3.4.2",
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.core.resources;bundle-version="3.4.2",
+ org.eclipse.emf.common,
  java3d
 Eclipse-LazyStart: true
 Export-Package: com.generalrobotix.ui;
@@ -34,6 +35,7 @@ Export-Package: com.generalrobotix.ui;
    org.w3c.dom,
    javax.media.j3d,
    jp.go.aist.hrp.simulator",
+ com.generalrobotix.ui.plugin,
  com.generalrobotix.ui.util;
   uses:="javax.vecmath,
    org.omg.CosNaming,
@@ -80,7 +82,7 @@ Export-Package: com.generalrobotix.ui;
  jp.go.aist.hrp.simulator,
  jp.go.aist.hrp.simulator.CameraPackage,
  jp.go.aist.hrp.simulator.DynamicsSimulatorPackage,
-  jp.go.aist.hrp.simulator.ModelLoaderPackage
+ jp.go.aist.hrp.simulator.ModelLoaderPackage
 Bundle-ClassPath: .,
  jython.jar,
  OpenRTM-aist-1.1.0.jar,
