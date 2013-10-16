@@ -36,8 +36,8 @@ public class GrxServerManager extends GrxBaseItem{
     private static final int    MAXMUM_PORT_NUMBER  = 65535;
     private static final String LINE_SEPARATOR = new String( System.getProperty("line.separator") );
     
-    public static int     NAME_SERVER_PORT_ ;
-    public static String  NAME_SERVER_HOST_ ;
+    public static int     NAME_SERVER_PORT_ = 2809;
+    public static String  NAME_SERVER_HOST_ = "localhost";
     public static String  NAME_SERVER_LOG_DIR_ ;
     public String  serverInfoDefaultDir_  = "";
     public int     serverInfoDefaultWaitCount_ = 0;
