@@ -1,0 +1,6 @@
+*~
+*.so
+*Comp
+Makefile
+cmake_install.cmake
+
