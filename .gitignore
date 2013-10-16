@@ -1,6 +1,14 @@
 *~
 *.so
 *Comp
+CMakeCache.txt
+CMakeFiles
+java/corba/*.compiled
+java/corba/*.idl
+java/corba/jp
+java/corba/src
+bin
+lib
 Makefile
 cmake_install.cmake
 
