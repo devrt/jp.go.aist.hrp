@@ -2,13 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GrxUI プラグイン
 Bundle-SymbolicName: com.generalrobotix.ui.grxui;singleton:=true
-Bundle-Version: 0.9.8
+Bundle-Version: 0.9.8.qualifier
 Bundle-Activator: com.generalrobotix.ui.grxui.Activator
 Bundle-Vendor: GENERALROBOTIX
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui@ORG_ECLIPSE_UI_VERSION@,
  org.eclipse.core.runtime@ORG_ECLIPSE_CORE_RUNTIME_VERSION@,
  org.eclipse.core.resources@ORG_ECLIPSE_CORE_RESOURCES_VERSION@,
+ org.eclipse.emf.common,
  java3d
 Eclipse-LazyStart: true
 Export-Package: com.generalrobotix.ui;
@@ -77,6 +78,7 @@ Export-Package: com.generalrobotix.ui;
    jp.go.aist.hrp.simulator,
    jp.go.aist.hrp.simulator.CameraPackage,
    javax.swing",
+ com.generalrobotix.ui.plugin,
  jp.go.aist.hrp.simulator,
  jp.go.aist.hrp.simulator.CameraPackage,
  jp.go.aist.hrp.simulator.DynamicsSimulatorPackage,
